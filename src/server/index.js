@@ -1,0 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("tsconfig-paths/register");
+require("megadata/register");
+const Server_1 = require("./classes/Server");
+const server = new Server_1.default({ port: 8001 });
+process.on('SIGINT', () => server.close());
+process.on('SIGTERM', () => server.close());
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLG1DQUFnQztBQUNoQyw2QkFBMEI7QUFFMUIsNkNBQXFDO0FBRXJDLE1BQU0sTUFBTSxHQUFHLElBQUksZ0JBQU0sQ0FBQyxFQUFFLElBQUksRUFBRSxJQUFJLEVBQUUsQ0FBQyxDQUFBO0FBRXpDLE9BQU8sQ0FBQyxFQUFFLENBQUMsUUFBUSxFQUFFLEdBQUcsRUFBRSxDQUFDLE1BQU0sQ0FBQyxLQUFLLEVBQUUsQ0FBQyxDQUFBO0FBQzFDLE9BQU8sQ0FBQyxFQUFFLENBQUMsU0FBUyxFQUFFLEdBQUcsRUFBRSxDQUFDLE1BQU0sQ0FBQyxLQUFLLEVBQUUsQ0FBQyxDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0ICd0c2NvbmZpZy1wYXRocy9yZWdpc3RlcidcbmltcG9ydCAnbWVnYWRhdGEvcmVnaXN0ZXInXG5cbmltcG9ydCBTZXJ2ZXIgZnJvbSAnLi9jbGFzc2VzL1NlcnZlcidcblxuY29uc3Qgc2VydmVyID0gbmV3IFNlcnZlcih7IHBvcnQ6IDgwMDEgfSlcblxucHJvY2Vzcy5vbignU0lHSU5UJywgKCkgPT4gc2VydmVyLmNsb3NlKCkpXG5wcm9jZXNzLm9uKCdTSUdURVJNJywgKCkgPT4gc2VydmVyLmNsb3NlKCkpXG4iXX0=

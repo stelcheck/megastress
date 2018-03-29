@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+		"alwaysStrict": true,
+		"noImplicitAny": false,
+		"target": "es2017",
+		"module": "commonjs",
+    "moduleResolution": "node"
+  }
+}

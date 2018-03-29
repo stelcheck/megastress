@@ -14,9 +14,9 @@
     "baseUrl": "./",
     "paths": {
       "test/*": ["./test/*"],
-      "shared/*": ["./shared/*"],
-      "client/*": ["./client/*"],
-      "server/*": ["./server/*"]
+      "megadata": ["./node_modules/megadata/src/index.ts"],
+      "megadata*": ["./node_modules/megadata/src/*"],
+      "shared/*": ["./src/shared/*"]
     }
   }
 }
