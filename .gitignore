@@ -1,0 +1,13 @@
+/lib
+/node_modules
+.swp
+*.swp
+*.log
+.idea
+.DS_Store
+._.DS_Store
+npm-debug.log
+/.nyc_output
+/coverage-report
+/benchmarks/app.js
+/benchmarks/app.d.ts

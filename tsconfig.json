@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "lib": ["es2015", "es2017"],
+    "declaration": true,
+    "experimentalDecorators": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "removeComments": false,
+    "inlineSources": true,
+    "inlineSourceMap": true,
+    "baseUrl": "./",
+    "paths": {
+      "megadata": ["./node_modules/megadata/src/index.ts"],
+      "megadata/*": ["./node_modules/megadata/src/*"],
+      "test/*": ["./test/*"],
+      "benchmarks": ["./benchmarks/index.ts"],
+      "shared/*": ["./example/shared/*"],
+      "client/*": ["./example/client/*"],
+      "server/*": ["./example/server/*"]
+    }
+  }
+}
