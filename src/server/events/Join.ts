@@ -1,27 +1,27 @@
 import Player from '../classes/Player'
-
+import PlayerData from 'shared/PlayerData';
+import ConnectionRefused from 'shared/messages/types/ConnectionRefused'
 import Join from 'shared/messages/types/Join'
-import GameInfo from 'shared/messages/types/GameInfo'
-
-let nextId = 0
 
 export default function (player: Player) {
   const { game } = Player
 
-  const gameInfo = {
-    players: Array.from(game.players.values())
-  }
 
-  player.once(Join, (message) => {
-    nextId += 1
+  player.on(Join, (message) => {
 
-    player.nickname = message.nickname
-    player.color = message.color
-    player.id = nextId
+    const { nickname } = message
 
-    game.join(player)
+    if (game.playerCanJoin(nickname)) {
+      
+      game.join(player, nickname)
 
-    gameInfo.players = Array.from(game.players.values())
-    player.send(GameInfo, gameInfo)
+    } else {
+
+      const connectionRefused = { reason: `Name '${nickname}' is already taken.`}
+      console.log(`Refusing client, because '${connectionRefused.reason}'.`)
+      player.send(ConnectionRefused, connectionRefused)
+      player.dispose()
+    }
+
   })
 }

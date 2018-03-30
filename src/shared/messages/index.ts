@@ -5,6 +5,7 @@ const types = require.context('./types/')
 
 export enum TypeIds {
   Join,
+  ConnectionRefused,
   GameInfo,
   Joined,
   Left,

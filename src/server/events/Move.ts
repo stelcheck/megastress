@@ -12,8 +12,8 @@ export default function (player: Player) {
   }
 
   player.on(Move, (move: Move) => {
-    player.position = move
-    Object.assign(moved, move)
-    game.broadcast(Moved, moved, player)
+  //  player.playerData.position = move
+   // Object.assign(moved, move)
+    //game.broadcast(Moved, moved, player)
   })
 }

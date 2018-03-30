@@ -1,29 +1,14 @@
-import { Event } from 'megadata/classes/MessageEmitter'
-import Game from './classes/Game'
+import GameClient from './classes/GameClient'
+import HeadlessGameClient from './classes/HeadlessGameClient';
 
-const client = new WebSocket('ws://localhost:8001/')
-client.binaryType = 'arraybuffer'
+const clientWs = new WebSocket('ws://localhost:8001/')
+clientWs.binaryType = 'arraybuffer'
+new GameClient('Client', clientWs)
 
-import { Color } from '../shared/enums'
+setTimeout(() => {
 
-client.onopen = () => {
-  console.log("Helo")
-  const game = new Game({ send: (buffer) => client.send(buffer) })
-  const parse = game.createMessageParser()
+  const headlessWs = new WebSocket('ws://localhost:8001/')
+  headlessWs.binaryType = 'arraybuffer'
+  new HeadlessGameClient(`Headless #1`, headlessWs)
 
-  game.on(Event.Ignored, (message) => console.warn(
-    `received message of type ${message.constructor.name}`,
-    `but no listeners are set for it`
-  ))
-
-  client.onmessage = async ({ data }) => parse(data)
-  client.onclose = () => location.reload()
-
-  let nickname: string | null = null
-
-  while (nickname === null) {
-    nickname = prompt('Nickname:')
-  }
-
-  game.join(nickname, Color.Red)
-}
+}, 1500)
