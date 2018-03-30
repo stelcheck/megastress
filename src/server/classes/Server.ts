@@ -17,12 +17,18 @@ export default class Server extends WebSocketServer {
         ))
 
         ws.on('message', player.createMessageParser())
-        ws.on('close', () => player.destroy())
-      })
+        ws.on('close', () => {
+          // TODO: add keep alive check
+          player.destroy()
+          if (player.playerData.id !== 0) {
+            console.log(`${player.debugName()} left.`)
+          }
+        })
 
-      if (callback) {
-        callback()
-      }
+        if (callback) {
+          callback()
+        }
+      })
     })
   }
 }

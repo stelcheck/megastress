@@ -5,7 +5,7 @@ export default function (client: AbstractGameClient) {
 
   client.once(GameInfo, (message) => {
 
-    client.log(`Joined server.`)
+    client.log(`You joined the server.`)
     client.onJoinedServer(message)
   })
 

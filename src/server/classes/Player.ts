@@ -29,4 +29,9 @@ export default class Player extends MessageEmitter {
   public dispose() {
     this.ws.close()
   }
+
+  public debugName() {
+    return `${this.id()}:${this.playerData.nickname}`
+  }
+
 }

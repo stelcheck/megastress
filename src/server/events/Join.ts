@@ -7,10 +7,10 @@ export default function (player: Player) {
   const { game } = Player
 
 
-  player.on(Join, (message) => {
+  player.once(Join, (message) => {
 
     const { nickname } = message
-
+    console.log("new join request from " + nickname)
     if (game.playerCanJoin(nickname)) {
       
       game.join(player, nickname)
