@@ -1,5 +1,10 @@
 import GameClient from './classes/GameClient'
 import HeadlessGameClient from './classes/HeadlessGameClient';
+import Globals from 'shared/Globals'
+
+const canvas = document.getElementById('canvas') as HTMLCanvasElement
+canvas.setAttribute('width', `${Globals.CANVAS_WIDTH}`)
+canvas.setAttribute('height', `${Globals.CANVAS_HEIGHT}`)
 
 const clientWs = new WebSocket('ws://localhost:8001/')
 clientWs.binaryType = 'arraybuffer'

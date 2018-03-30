@@ -57,6 +57,12 @@ export default abstract class AbstractGameClient extends MessageEmitter {
         this.players.set(playerData.id, playerData)
     }
 
+    public update() {
+        if (this.player && this.player.move()) {
+          //  this.send(Move,)
+        }
+    }
+
     public dispose() {
         if (this.players) {
             this.players.clear()

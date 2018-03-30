@@ -1,34 +1,19 @@
 import AbstractGameClient from "./AbstractGameClient";
-import PlayerData from '../../shared/PlayerData'
+import PlayerData from 'shared/PlayerData'
+import Globals from 'shared/Globals'
 
 export default class GameClient extends AbstractGameClient {
 
     private clientLog: HTMLTextAreaElement
     private context2D: CanvasRenderingContext2D
-    private canvasSize: {
-        width: number, height: number
-    }
 
     constructor(public nickname: string, public connection?: WebSocket) {
         super(nickname, connection)
 
         this.clientLog = document.getElementById('clientLog') as HTMLTextAreaElement
-        const canvas = document.getElementById('map') as HTMLCanvasElement
+        
+        const canvas = document.getElementById('canvas') as HTMLCanvasElement
         this.context2D = canvas.getContext('2d') as CanvasRenderingContext2D
-        this.canvasSize = {
-            width: canvas.width,
-            height: canvas.height 
-        }
-
-        let spawnButton = document.getElementById('spawnButton')!
-        spawnButton.onclick = (_ev: MouseEvent) => {
-            this.spawnPlayer()
-        }
-
-        let toggleMovementButton = document.getElementById('toggleMovementButton')!
-        toggleMovementButton.onclick = (_ev: MouseEvent) => {
-
-        }
 
         this.tick()
     }
@@ -40,18 +25,8 @@ tick() {
     window.requestAnimationFrame(() => this.tick());
 }
 
-spawnPlayer() {
-
-}
-
-update() {
-
-    
-
-}
-
 draw() {
-    this.drawRect(this.canvasSize, { x: 0, y: 0 }, 'rgb(100, 100, 100)')
+    this.drawRect(Globals.CANVAS_SIZE, { x: 0, y: 0 }, 'rgb(100, 100, 100)')
 
     if (this.players) {
         Array.from(this.players.values()).forEach((p: PlayerData, index) => {
