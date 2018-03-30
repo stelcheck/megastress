@@ -58,6 +58,5 @@ export default class Player {
         }
 
         return true
-
     }
 }

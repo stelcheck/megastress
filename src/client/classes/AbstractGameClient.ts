@@ -2,7 +2,7 @@ import Player from './Player';
 import PlayerData from '../../shared/PlayerData'
 import GameInfo from 'shared/messages/types/GameInfo'
 import Join from 'shared/messages/types/Join'
-import { Color } from 'shared/enums'
+import Move from 'shared/messages/types/Move'
 
 import MessageEmitter, { AutoloadEvents, Event } from 'megadata/classes/MessageEmitter'
 
@@ -57,9 +57,17 @@ export default abstract class AbstractGameClient extends MessageEmitter {
         this.players.set(playerData.id, playerData)
     }
 
+    public updatePlayerPosition(id: number, pos: { x: number, y: number }) {
+        if (this.players.has(id)) {
+            this.players.get(id)!.position = pos
+        }
+    }
+
     public update() {
         if (this.player && this.player.move()) {
-          //  this.send(Move,)
+
+            // Send new position to server
+            this.send(Move, this.player.position)
         }
     }
 

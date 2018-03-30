@@ -14,5 +14,3 @@ export enum TypeIds {
 }
 
 export const Type: TypeDecorator<TypeIds> = megadata(module, types)
-
-export const PlayerId = Uint8

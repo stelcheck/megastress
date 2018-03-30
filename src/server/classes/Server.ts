@@ -12,7 +12,7 @@ export default class Server extends WebSocketServer {
         console.log("Incoming client connection.")
 
         player.on(Event.Ignored, (message) => console.warn(
-          `${player.playerData.nickname} received message of type ${message.constructor.name}`,
+          `${player.debugName()} received message of type ${message.constructor.name}`,
           `but no listeners are set for it`
         ))
 
