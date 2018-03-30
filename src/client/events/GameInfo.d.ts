@@ -1,2 +1,2 @@
-import Game from '../classes/Game';
-export default function (game: Game): void;
+import AbstractGameClient from '../classes/AbstractGameClient';
+export default function (client: AbstractGameClient): void;
