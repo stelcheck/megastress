@@ -36,7 +36,7 @@ export default abstract class AbstractGameClient extends MessageEmitter {
                 this.log("Connection to server closed.")
                 this.dispose()
             }
-    
+
             this.connection.onerror = (ev) => {
                 this.log("Error opening websocket: ")
                 this.log(ev)
@@ -64,10 +64,13 @@ export default abstract class AbstractGameClient extends MessageEmitter {
     }
 
     public update() {
-        if (this.player && this.player.move()) {
+        if (this.connection && this.connection.readyState === WebSocket.OPEN) {
+            if (this.player.move()) {
 
-            // Send new position to server
-            this.send(Move, this.player.position)
+                // Send new position to server
+                this.send(Move, this.player.position)
+    
+            }
         }
     }
 
