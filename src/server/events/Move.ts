@@ -13,11 +13,13 @@ export default function (player: Player) {
 
   player.on(Move, (move: Move) => {
 
-    console.log(`${player.debugName()} sent move message.`)
+    //console.log(`${player.debugName()} sent move message.`)
 
     // TODO: server could validate the new position, etc.
     const { x, y } = move
     player.playerData.position = { x, y }
+    moved.x = x
+    moved.y = y
 
     // Notify all other clients
     game.broadcast(Moved, moved, moved.playerId)

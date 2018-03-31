@@ -1,9 +1,11 @@
-import { Type, TypeIds, PlayerId } from '../'
-import BinaryFormat from 'megadata/classes/BinarySerializationFormat'
+import { Type, TypeIds } from '../'
+import BinaryFormat, { Int32 } from 'megadata/classes/BinarySerializationFormat'
 import Join from './Join'
 
 @Type(TypeIds.Left, BinaryFormat)
 export default class Left extends Join {
-  @PlayerId
+  
+  @Int32
   public id: number
+
 }
