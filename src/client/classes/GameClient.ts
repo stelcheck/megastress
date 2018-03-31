@@ -1,16 +1,15 @@
 import AbstractGameClient from "./AbstractGameClient";
 import PlayerData from 'shared/PlayerData'
+import FPSLimiter from 'shared/FPSLimiter'
 import Globals from 'shared/Globals'
+import GameInfo from "shared/messages/types/GameInfo";
 
 export default class GameClient extends AbstractGameClient {
 
     private clientLog: HTMLTextAreaElement
     private context2D: CanvasRenderingContext2D
 
-    private fpsLimiter: { fpsInterval: number, last: number } = {
-        fpsInterval: 1000 / Globals.FPS,
-        last: Date.now()
-    }
+    private fpsLimiter = new FPSLimiter()
 
     constructor(public nickname: string, public connection?: WebSocket) {
         super(nickname, connection)
@@ -20,18 +19,21 @@ export default class GameClient extends AbstractGameClient {
         const canvas = document.getElementById('canvas') as HTMLCanvasElement
         this.context2D = canvas.getContext('2d') as CanvasRenderingContext2D
 
+        // Draw once for the background
+        this.draw()
+    }
+
+    onJoinedServer(gameInfo: GameInfo) {
+        super.onJoinedServer(gameInfo)
+
+        // Start update and draw loop
         this.tick()
     }
 
     tick() {
         window.requestAnimationFrame(() => this.tick());
 
-        const now = Date.now()
-        const elapsed = now - this.fpsLimiter.last
-
-        if (elapsed > this.fpsLimiter.fpsInterval) {
-            this.fpsLimiter.last = now - (elapsed % this.fpsLimiter.fpsInterval)
-
+        if (this.fpsLimiter.nextFrame()) {
             this.update()
             this.draw()
         }
