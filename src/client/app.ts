@@ -1,28 +1,19 @@
 import GameClient from './classes/GameClient'
 import HeadlessGameClient from './classes/HeadlessGameClient';
-import Globals from 'shared/Globals'
+import ClientManager from './classes/ClientManager'
 
-const canvas = document.getElementById('canvas') as HTMLCanvasElement
-canvas.setAttribute('width', `${Globals.CANVAS_WIDTH}`)
-canvas.setAttribute('height', `${Globals.CANVAS_HEIGHT}`)
-
-const clientWs = new WebSocket('ws://localhost:8001/')
-clientWs.binaryType = 'arraybuffer'
-new GameClient('Client', clientWs)
+const clientManager = new ClientManager()
+clientManager.setupGuiClient('Client')
 
 setTimeout(() => {
 
-  const headlessWs = new WebSocket('ws://localhost:8001/')
-  headlessWs.binaryType = 'arraybuffer'
-  new HeadlessGameClient(`Headless #1`, headlessWs)
+  clientManager.spawnHeadlessClient('Headless #1')
 
 }, 1500)
 
 
 setTimeout(() => {
 
-  const headlessWs = new WebSocket('ws://localhost:8001/')
-  headlessWs.binaryType = 'arraybuffer'
-  new HeadlessGameClient(`Headless #2`, headlessWs)
+  clientManager.spawnHeadlessClient('Headless #2')
 
 }, 2500)

@@ -1,11 +1,10 @@
 import { Type, TypeIds } from '../'
-import BinaryFormat, { Int32 } from 'megadata/classes/BinarySerializationFormat'
-import Join from './Join'
+import JsonFormat from 'megadata/classes/JsonSerializationFormat'
+import MessageType from 'megadata/classes/MessageType';
 
-@Type(TypeIds.Left, BinaryFormat)
-export default class Left extends Join {
+@Type(TypeIds.Left, JsonFormat)
+export default class Left extends MessageType {
   
-  @Int32
   public id: number
 
 }

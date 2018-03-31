@@ -6,7 +6,7 @@ export default function (client: AbstractGameClient) {
 
   client.on(Joined, (message) => {
 
-    client.log(`Client ${message.id}:${message.nickname} joined the server.`)
+    client.log(`${message.nickname} joined the server.`)
 
     // The message is recycled by the object pool(?), 
     // thus create a copy of the player data

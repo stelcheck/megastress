@@ -57,6 +57,14 @@ export default abstract class AbstractGameClient extends MessageEmitter {
         this.players.set(playerData.id, playerData)
     }
 
+    public onClientLeft(playerId: number) {
+        const leftPlayer = this.players.get(playerId)
+        if (leftPlayer) {
+            this.log(`${leftPlayer.nickname} left the server.`)
+            this.players.delete(playerId)
+        }
+    }
+
     public updatePlayerPosition(id: number, pos: { x: number, y: number }) {
         if (this.players.has(id)) {
             this.players.get(id)!.position = pos

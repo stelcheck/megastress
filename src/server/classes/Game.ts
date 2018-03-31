@@ -39,9 +39,9 @@ export default class Game {
   }
 
   public leave(player: Player) {
-    const { playerData } = player
-    this.players.delete(playerData.id)
-    this.broadcast(Left, playerData, playerData.id)
+    const { id } = player.playerData
+    this.players.delete(id)
+    this.broadcast(Left, { id }, id)
   }
 
   public broadcast<T extends MessageType>(type: IMessageType<T>, data: MessageTypeData<T>, skipId?: number) {
