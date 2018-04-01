@@ -3,6 +3,8 @@ import PlayerData from 'shared/PlayerData'
 import FPSLimiter from 'shared/FPSLimiter'
 import Globals from 'shared/Globals'
 import GameInfo from "shared/messages/types/GameInfo";
+import NetworkStats from "shared/NetworkStats";
+import StatsRequest from "shared/messages/types/StatsRequest"
 
 export default class GameClient extends AbstractGameClient {
 
@@ -10,6 +12,9 @@ export default class GameClient extends AbstractGameClient {
     private context2D: CanvasRenderingContext2D
 
     private fpsLimiter = new FPSLimiter()
+
+    // Abuse GameClient to cache server network stats from StatsResponse
+    public serverNetworkStats = new NetworkStats()
 
     constructor(public nickname: string, public connection?: WebSocket) {
         super(nickname, connection)
@@ -25,6 +30,9 @@ export default class GameClient extends AbstractGameClient {
 
     onJoinedServer(gameInfo: GameInfo) {
         super.onJoinedServer(gameInfo)
+
+        // Enable periodic NetworkStat reports from the server
+        this.send(StatsRequest, {})
 
         // Start update and draw loop
         this.tick()

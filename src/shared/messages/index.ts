@@ -10,7 +10,9 @@ export enum TypeIds {
   Joined,
   Left,
   Move,
-  Moved
+  Moved,
+  StatsRequest,
+  StatsResponse
 }
 
 export const Type: TypeDecorator<TypeIds> = megadata(module, types)

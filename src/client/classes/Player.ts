@@ -24,6 +24,10 @@ export default class Player {
 
     constructor(public playerData: PlayerData) { }
 
+    public toggleMovement() {
+        this.moving = !this.moving
+    }
+
     public move() {
 
         // Moves the own player

@@ -1,10 +1,9 @@
-import * as WebSocket from 'uws';
-
-import MessageEmitter, { AutoloadEvents } from 'megadata/classes/MessageEmitter'
 import Game from './Game'
-
-import { Color } from 'shared/enums'
 import PlayerData from 'shared/PlayerData';
+
+import * as WebSocket from 'uws';
+import MessageEmitter, { AutoloadEvents } from 'megadata/classes/MessageEmitter'
+import MessageType, { IMessageType, MessageTypeData } from 'megadata/classes/MessageType';
 
 const events = require.context('../events/')
 
@@ -31,7 +30,11 @@ export default class Player extends MessageEmitter {
   }
 
   public debugName() {
-    return `${this.id()}:${this.playerData.nickname}`
+    return `id:${this.id()}:${this.playerData.nickname}`
   }
 
+  public send<T extends MessageType>(type: IMessageType<T>, data: MessageTypeData<T>)  {
+    super.send(type, data)
+    Player.game.networkStats.sent += 1
+  }
 }

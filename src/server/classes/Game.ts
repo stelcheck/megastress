@@ -3,14 +3,19 @@ import MessageType, { MessageTypeData, IMessageType } from 'megadata/classes/Mes
 import Player from './Player'
 import PlayerData from 'shared/PlayerData';
 
+import NetworkStats from 'shared/NetworkStats';
 import GameInfo from 'shared/messages/types/GameInfo'
 import Joined from 'shared/messages/types/Joined'
 import Left from 'shared/messages/types/Left'
+import StatsResponse from 'shared/messages/types/StatsResponse'
 
 export default class Game {
   public players: Map<number, Player> = new Map()
 
   private nextPlayerId = 0
+
+  public networkStats = new NetworkStats()
+  private sendNetworkStatsTo = new Array<number>()
 
   public join(player: Player, nickname: string) {
     
@@ -41,6 +46,12 @@ export default class Game {
   public leave(player: Player) {
     const { id } = player.playerData
     this.players.delete(id)
+
+    const index = this.sendNetworkStatsTo.indexOf(id)
+    if (index !== -1) {
+      this.sendNetworkStatsTo.splice(index, 1)
+    }
+
     this.broadcast(Left, { id }, id)
   }
 
@@ -52,6 +63,41 @@ export default class Game {
 
       player.send(type, data)
     })
+  }
+
+  public registerClientForNetworkStats(player: Player) {
+    const { id } = player.playerData
+    if (this.sendNetworkStatsTo.indexOf(id) === -1) {
+      this.sendNetworkStatsTo.push(id)
+
+      if (this.sendNetworkStatsTo.length === 1) {
+        this.reportNetworkStats()
+      }
+    }
+  }
+
+  private _lastReportedStats = new NetworkStats()
+  private reportNetworkStats() {
+
+    setTimeout(() => {
+      let { sent, received } = this.networkStats
+      const changed = this._lastReportedStats.sent !== sent || this._lastReportedStats.received !== received
+
+      if (changed) {
+        this.sendNetworkStatsTo.forEach((id) => {
+          const client = this.players.get(id)
+          if (client) {
+            client.send(StatsResponse, this.networkStats)
+            sent += 1
+          }
+        })
+
+        this._lastReportedStats = { sent , received }
+      }
+
+      this.reportNetworkStats()
+    }, 200)
+
   }
 
   private getNextPlayerId() {

@@ -5,12 +5,26 @@
 
     <div>
       <button id="spawnButton">Spawn Client</button>
-      <button id="clearHeadlessClientsButton">Clear Clients</button>
+      <button id="clearHeadlessClientsButton">Reset Clients</button>
 
       <button id="toggleMovementButton">Toggle Movement</button>
     </div>
 
     <br>
+    <b>GameClient</b>
+    (
+      <label id="gameClientTraffic"></label>
+    )   
+    <b>Server</b>
+    (
+      <label id="serverTraffic"></label>
+    )
+    <br>
+
+    <div id="headlessClientsStats">
+    </div>
+    <br>
+
     <textarea id="clientLog" cols=80 rows=15></textarea>
 
     <script src="/app.js"></script>

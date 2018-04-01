@@ -1,10 +1,12 @@
-import Player from './Player';
-import PlayerData from '../../shared/PlayerData'
+import Player from './Player'
+import PlayerData from 'shared/PlayerData'
+import NetworkStats from 'shared/NetworkStats'
 import GameInfo from 'shared/messages/types/GameInfo'
 import Join from 'shared/messages/types/Join'
 import Move from 'shared/messages/types/Move'
 
 import MessageEmitter, { AutoloadEvents, Event } from 'megadata/classes/MessageEmitter'
+import MessageType, { MessageTypeData, IMessageType } from 'megadata/classes/MessageType'
 
 const events = require.context('../events/')
 @AutoloadEvents(events)
@@ -12,6 +14,7 @@ export default abstract class AbstractGameClient extends MessageEmitter {
     players: Map<number, PlayerData>
 
     protected player: Player
+    public networkStat = new NetworkStats()
 
     constructor(public nickname: string, public connection?: WebSocket) {
         super(connection ? { send: (buffer) => connection.send(buffer) } : undefined)
@@ -22,7 +25,10 @@ export default abstract class AbstractGameClient extends MessageEmitter {
                 this.log("Sent join request... ")
 
                 const parse = this.createMessageParser()
-                this.connection!.onmessage = async ({ data }) => parse(data)
+                this.connection!.onmessage = async ({ data }) => {
+                    this.networkStat.received += 1
+                    parse(data)
+                }
 
                 this.on(Event.Ignored, (message) => console.warn(
                     `received message of type ${message.constructor.name}`,
@@ -80,6 +86,17 @@ export default abstract class AbstractGameClient extends MessageEmitter {
     
             }
         }
+    }
+
+    public toggleMovement() {
+        if (this.player) {
+            this.player.toggleMovement()
+        }
+    }
+
+    public send<T extends MessageType>(type: IMessageType<T>, data: MessageTypeData<T>)  {
+        super.send(type, data)
+        this.networkStat.sent += 1
     }
 
     public dispose() {
