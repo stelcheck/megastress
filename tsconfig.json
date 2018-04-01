@@ -4,8 +4,8 @@
     "declaration": true,
     "experimentalDecorators": true,
     "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    //"noUnusedLocals": true,
+    //"noUnusedParameters": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "removeComments": false,
@@ -13,9 +13,8 @@
     "inlineSourceMap": true,
     "baseUrl": "./",
     "paths": {
-      "test/*": ["./test/*"],
-      "megadata": ["./node_modules/megadata/src/index.ts"],
-      "megadata*": ["./node_modules/megadata/src/*"],
+      "megadata": ["./node_modules/megadata/lib/index.ts"],
+      "megadata/*": ["./node_modules/megadata/lib/*"],
       "shared/*": ["./src/shared/*"]
     }
   }

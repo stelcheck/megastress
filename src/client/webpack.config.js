@@ -22,7 +22,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.ts$/,
-				exclude: /node_modules/,
+				include: /(node_modules\/megadata\/|src\/)/,
 				use: {
 					loader: 'ts-loader'
 				}
