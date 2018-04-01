@@ -2,16 +2,17 @@ import Globals from 'shared/Globals'
 import GameClient from './GameClient'
 import AbstractGameClient from './AbstractGameClient'
 import HeadlessGameClient from './HeadlessGameClient'
+import NetworkStats from 'shared/NetworkStats';
 
 export default class ClientManager {
 
     static readonly SOCKET_URL = 'ws://localhost:8001/'
 
+    private gameClient: GameClient
     private clients = new Array<AbstractGameClient>()
-
-    private clientStats = new Map<AbstractGameClient, HTMLLabelElement>()
-    private headlessStatsParent = document.getElementById('headlessClientsStats') as HTMLDivElement
-    private serverStats = document.getElementById('serverTraffic') as HTMLLabelElement
+    private trafficTable = document.getElementById('trafficTable') as HTMLTableElement
+    private trafficRows = new Array<HTMLTableRowElement>()
+    private trafficRowsClientMap = new Map<AbstractGameClient, HTMLTableRowElement>()
 
     constructor() {
 
@@ -24,23 +25,19 @@ export default class ClientManager {
         const toggleMovementButton = document.getElementById('toggleMovementButton') as HTMLButtonElement
         toggleMovementButton.onclick = () => this.toggleClientMovements()
 
+        this.createTrafficRows()
         this.updateStats()
     }
 
     setupGuiClient(name: string) {
-
         const canvas = document.getElementById('canvas') as HTMLCanvasElement
         canvas.setAttribute('width', `${Globals.CANVAS_WIDTH}`)
         canvas.setAttribute('height', `${Globals.CANVAS_HEIGHT}`)
-        
-        const stats = document.getElementById('gameClientTraffic') as HTMLLabelElement
-        const client = this.spawnClient(GameClient, name)
-        this.clientStats.set(client, stats)
+        this.gameClient = this.spawnClient(GameClient, name)
     }
 
     spawnHeadlessClient(name: string) {
-        const client = this.spawnClient(HeadlessGameClient, name)
-        this.createStatsLabel(client)
+        this.spawnClient(HeadlessGameClient, name)
     }
 
     resetHeadlessClients() {
@@ -73,10 +70,12 @@ export default class ClientManager {
         const index = this.clients.indexOf(client)
         if (index !== -1) {
             this.clients.splice(index, 1)
-            const label = this.clientStats.get(client)
-
-            if (client instanceof HeadlessGameClient) {
-                this.headlessStatsParent.removeChild(label!)
+            
+            const takenRow = this.trafficRowsClientMap.get(client)
+            if (takenRow) {
+                this.updateTrafficRow(null, takenRow)
+                takenRow.setAttribute('free', 'true')
+                this.trafficRowsClientMap.delete(client)
             }
         }
     }
@@ -87,27 +86,101 @@ export default class ClientManager {
         return socket
     }
 
+    private readonly trafficElements = ['who', 'received', 'sent', 'receivedS', 'sentS']
+    private createTrafficRows() {
+        const rows = 18
+        for (let i = 0; i < rows; i++) {
+
+            const row = this.trafficTable.insertRow()
+            row.setAttribute('id', `trafficRow${i}`)
+
+            this.trafficRows.push(row)
+            row.setAttribute('free', i > 0 ? 'true' : 'false')
+
+            for (let j = 0; j < this.trafficElements.length; j++) {
+                const cell = row.insertCell()
+                cell.setAttribute('height', '18')
+                cell.setAttribute('id', `trafficCell${this.trafficElements[j]}`)
+            }
+        }
+    }
+
     private updateStats() {
         setTimeout(() => {
-            this.clients.forEach((client) => {
-                let label = this.clientStats.get(client)
-                if (label) {
-                    label.innerText = `Received: ${client.networkStat.received} Sent: ${client.networkStat.sent}`
 
-                    if (client instanceof GameClient) {
-                        this.serverStats.innerText = `Received: ${client.serverNetworkStats.received} Sent: ${client.serverNetworkStats.sent}`
-                    }
+            // Server takes the first row
+            this.updateServerTrafficRow()
+
+            this.clients.forEach((client) => {
+
+                const row = this.getTrafficRow(client)
+                if (row) {
+                    this.updateTrafficRow( { name: client.nickname, networkStats: client.networkStat }, row)
                 }
+
             })
             this.updateStats()
         }, 100)
     }
 
-    private createStatsLabel(client: HeadlessGameClient) {
-        const statsLabel = document.createElement(`headless${this.clients.length - 1}Stats`) as HTMLLabelElement
-        this.headlessStatsParent.appendChild(statsLabel)
+    private updateServerTrafficRow() {
+        const networkStats = this.gameClient.serverNetworkStats
+        const name = 'Server'
+        const row = this.trafficRows[0]
 
-        this.clientStats.set(client, statsLabel)
+        this.updateTrafficRow({ name, networkStats }, row)
+
+    }
+
+    private updateTrafficRow(traffic: { name: string, networkStats: NetworkStats} | null, row: HTMLTableRowElement) {
+        for (let i = 0; i < row.cells.length; i++) {
+            const cell = row.cells[i]
+            const trafficElement = this.trafficElements[i]
+
+            switch (trafficElement) {
+
+                case 'who': {
+                    cell.textContent = traffic ? traffic.name : ''
+                    break
+                }
+                case 'received': {
+                    cell.textContent = traffic ? `${traffic.networkStats.received}` : ''
+                    break
+                }
+                case 'sent': {
+                    cell.textContent = traffic ? `${traffic.networkStats.sent}` : ''
+                    break
+                }
+                case 'receivedS': {
+                    //cell.textContent = `${traffic.networkStat.received}`
+                    break
+                }
+                case 'sentS': {
+                    //cell.textContent = `${traffic.networkStat.sent}`
+                    break
+                }
+            }
+        }
+    }
+
+    private getTrafficRow(client: AbstractGameClient) {
+        let row = this.trafficRowsClientMap.get(client)
+
+        if (!row) {
+            // Need to iterate over the array for the first free row
+            for (let i = 0; i < this.trafficRows.length; i++) {
+                let maybeRow = this.trafficRows[i]
+                if (maybeRow.getAttribute('free') === 'true') {
+                    row = maybeRow
+                    row.setAttribute('free', 'false')
+
+                    this.trafficRowsClientMap.set(client, row)
+                    break
+                }
+            }
+        }
+
+        return row
     }
 
 }

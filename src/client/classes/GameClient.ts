@@ -92,7 +92,7 @@ export default class GameClient extends AbstractGameClient {
             text = message
         }
 
-        this.clientLog.innerHTML += `[${new Date(Date.now()).toLocaleString()} ${this.nickname}] ${text}\n`
+        this.clientLog.innerHTML += `[${new Date(Date.now()).toLocaleString()}] ${text}\n`
     }
 
 }

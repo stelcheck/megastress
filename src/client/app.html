@@ -1,32 +1,42 @@
 <html>
-  <body>
-    <canvas style="border: 1px solid black;" id="canvas"></canvas>
-    <br>
+<head>
+  <style>
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+  </style>
+</head>
 
-    <div>
-      <button id="spawnButton">Spawn Client</button>
-      <button id="clearHeadlessClientsButton">Reset Clients</button>
+<body>
+  <canvas style="border: 1px solid black;" id="canvas"></canvas>
+  <br>
 
-      <button id="toggleMovementButton">Toggle Movement</button>
-    </div>
+  <div>
+    <button id="spawnButton">Spawn Client</button>
+    <button id="clearHeadlessClientsButton">Reset Clients</button>
 
-    <br>
-    <b>GameClient</b>
-    (
-      <label id="gameClientTraffic"></label>
-    )   
-    <b>Server</b>
-    (
-      <label id="serverTraffic"></label>
-    )
-    <br>
+    <button id="toggleMovementButton">Toggle Movement</button>
+  </div>
 
-    <div id="headlessClientsStats">
-    </div>
-    <br>
+  <br>
 
-    <textarea id="clientLog" cols=80 rows=15></textarea>
+  <table id='trafficTable' width="640">
+  <caption>Message Traffic</caption>
+    <tr>
+      <th>Who</th>
+      <th>Received</th>
+      <th>Sent</th>
+      <th>Received/s</th>
+      <th>Sent/s</th>
+    </tr>
+  </table>
 
-    <script src="/app.js"></script>
-  </body>
+  <textarea id="clientLog" cols=80 rows=15></textarea>
+
+  <script src="/app.js"></script>
+</body>
+
 </html>
