@@ -19,14 +19,10 @@ export default class Player {
         return this.playerData.size
     }
 
-    private moving: boolean = true
+    public moving: boolean = true
     private direction: number = 0
 
     constructor(public playerData: PlayerData) { }
-
-    public toggleMovement() {
-        this.moving = !this.moving
-    }
 
     public move() {
 

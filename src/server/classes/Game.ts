@@ -3,6 +3,7 @@ import MessageType, { MessageTypeData, IMessageType } from 'megadata/classes/Mes
 import Player from './Player'
 import PlayerData from 'shared/PlayerData';
 
+import Globals from 'shared/Globals'
 import NetworkStats from 'shared/NetworkStats';
 import GameInfo from 'shared/messages/types/GameInfo'
 import Joined from 'shared/messages/types/Joined'
@@ -120,11 +121,11 @@ export default class Game {
   }
 
   private calculateInitialPosition() {
-    let pos = { x: 50, y: 100}
 
-    pos.x += this.players.size * 50
+    let x = Math.floor(Math.random() * (Globals.CANVAS_WIDTH - 24))
+    let y = Math.floor(Math.random() * (Globals.CANVAS_HEIGHT- 24))  
     
-    return pos
+    return { x, y }
   }
 
   private getRandomColor() {

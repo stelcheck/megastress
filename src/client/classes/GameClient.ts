@@ -75,7 +75,7 @@ export default class GameClient extends AbstractGameClient {
         }
 
         this.context2D.font = "11px Arial";
-        this.context2D.fillStyle = 'rgb(0, 0, 0)'
+        this.context2D.fillStyle = 'rgb(255, 255, 255)'
         this.context2D.fillText(`${playerData.id}`, playerData.position.x + 4, playerData.position.y + 15);
     }
 

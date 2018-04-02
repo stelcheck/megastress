@@ -13,17 +13,38 @@ export default class ClientManager {
     private trafficTable = document.getElementById('trafficTable') as HTMLTableElement
     private trafficRows = new Array<HTMLTableRowElement>()
     private trafficRowsClientMap = new Map<AbstractGameClient, HTMLTableRowElement>()
+    private totalClientsLabel = document.getElementById('totalClients') as HTMLLabelElement
+
+    private randomDisconnecting = false
+    private randomSpawning = false
+    private clientNameCounter = 0
 
     constructor() {
 
         const spawnButton = document.getElementById('spawnButton') as HTMLButtonElement
-        spawnButton.onclick = () => this.spawnHeadlessClient(`Headless #${this.clients.length}`)
+        spawnButton.onclick = () => this.spawnHeadlessClient(`Headless #${this.clientNameCounter + 1}`)
 
         const removeHeadlessButton = document.getElementById('clearHeadlessClientsButton') as HTMLButtonElement
         removeHeadlessButton.onclick = () => this.resetHeadlessClients()
 
-        const toggleMovementButton = document.getElementById('toggleMovementButton') as HTMLButtonElement
-        toggleMovementButton.onclick = () => this.toggleClientMovements()
+        const freezeCheckbox = document.getElementById('freezeCheckbox') as HTMLInputElement
+        freezeCheckbox.onclick = () => this.setClientsMoving(freezeCheckbox.checked)
+
+        const randomDisconnectBox = document.getElementById('randomDisconnectCheckbox') as HTMLInputElement
+        randomDisconnectBox.onclick = () => {
+            this.randomDisconnecting = randomDisconnectBox.checked
+            if (this.randomDisconnecting) {
+                this.randomTimeout()
+            }
+        }
+
+        const randomSpawnBox = document.getElementById('randomSpawnCheckbox') as HTMLInputElement
+        randomSpawnBox.onclick = () => {
+            this.randomSpawning = randomSpawnBox.checked
+            if (this.randomSpawning) {
+                this.randomSpawn()
+            }
+        }
 
         this.createTrafficRows()
         this.updateStats()
@@ -38,6 +59,7 @@ export default class ClientManager {
 
     spawnHeadlessClient(name: string) {
         this.spawnClient(HeadlessGameClient, name)
+        this.clientNameCounter += 1
     }
 
     resetHeadlessClients() {
@@ -48,9 +70,9 @@ export default class ClientManager {
         }
     }
 
-    toggleClientMovements() {
+    setClientsMoving(moving: boolean) {
         this.clients.forEach((client) => {
-            client.toggleMovement()
+            client.setMoving(!moving)
         })
     }
 
@@ -63,6 +85,7 @@ export default class ClientManager {
         }
 
         this.clients.push(client)
+        this.updateTotalClientsLabel()
         return client
     }
 
@@ -70,7 +93,8 @@ export default class ClientManager {
         const index = this.clients.indexOf(client)
         if (index !== -1) {
             this.clients.splice(index, 1)
-            
+            this.updateTotalClientsLabel()
+
             const takenRow = this.trafficRowsClientMap.get(client)
             if (takenRow) {
                 this.updateTrafficRow(null, takenRow)
@@ -78,6 +102,47 @@ export default class ClientManager {
                 this.trafficRowsClientMap.delete(client)
             }
         }
+    }
+
+    private randomTimeout() {
+        if (!this.randomDisconnecting) {
+            return
+        }
+
+        const timeout = Math.floor((Math.random() * 5) + 1)
+        setTimeout( () => {
+            if (!this.randomDisconnecting) {
+                return
+            }
+
+            let clientCount = this.clients.length - 1
+            if (clientCount > 1) {
+                const clientIndex = Math.floor((Math.random() * clientCount) + 1)
+                if (clientIndex >= 1) {
+                    this.clients[clientIndex].dispose()
+                }
+            }
+
+            this.randomTimeout()
+        }, timeout * 1000)
+
+    }
+
+    private randomSpawn() {
+        if (!this.randomSpawning) {
+            return
+        }
+
+        const timeout = Math.floor((Math.random() * 5) + 1)
+        setTimeout( () => {
+            if (!this.randomSpawning) {
+                return
+            }
+
+            this.spawnHeadlessClient(`Random ${this.clientNameCounter + 1}`)
+            this.randomSpawn()
+        }, timeout * 1000)
+
     }
 
     private createClientSocket() {
@@ -183,4 +248,7 @@ export default class ClientManager {
         return row
     }
 
+    private updateTotalClientsLabel() {
+        this.totalClientsLabel.innerText = `Connected Clients: ${this.clients.length}`
+    }
 }

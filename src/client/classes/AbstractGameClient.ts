@@ -88,9 +88,9 @@ export default abstract class AbstractGameClient extends MessageEmitter {
         }
     }
 
-    public toggleMovement() {
+    public setMoving(moving: boolean) {
         if (this.player) {
-            this.player.toggleMovement()
+            this.player.moving = moving
         }
     }
 

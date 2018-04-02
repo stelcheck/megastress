@@ -17,11 +17,14 @@
   <div>
     <button id="spawnButton">Spawn Client</button>
     <button id="clearHeadlessClientsButton">Reset Clients</button>
-
-    <button id="toggleMovementButton">Toggle Movement</button>
+    <input type="checkbox" id="freezeCheckbox">Freeze</button>
+    <input type="checkbox" id="randomDisconnectCheckbox">Random disconnects</button>
+    <input type="checkbox" id="randomSpawnCheckbox">Random spawn</button>
   </div>
 
   <br>
+
+  <label id='totalClients'>Connected Clients: #</label>
 
   <table id='trafficTable' width="640">
   <caption>Message Traffic</caption>
